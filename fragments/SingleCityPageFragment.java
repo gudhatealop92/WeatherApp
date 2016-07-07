@@ -1,0 +1,53 @@
+package com.demo.alopgudhate.weatherapp.fragments;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.demo.alopgudhate.weatherapp.R;
+import com.demo.alopgudhate.weatherapp.system.RequestHandlerTask;
+import com.demo.alopgudhate.weatherapp.valueobjects.QueryConstructor;
+
+
+/**
+ * Created by Alop Gudhate on 4/7/16.
+ */
+public class SingleCityPageFragment extends android.support.v4.app.Fragment {
+
+    private String cityName;
+    private ListView lv;
+    private QueryConstructor queryConstructor;
+
+    public static SingleCityPageFragment newInstance(String city) {
+        SingleCityPageFragment fragment = new SingleCityPageFragment();
+        fragment.setCityName(city);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_multiple_city_wf, container, false);
+        queryConstructor = new QueryConstructor();
+        String query = queryConstructor.getQuery(cityName);
+        // call AsynTask to perform network operation on separate thread
+        lv = (ListView) view.findViewById(R.id.lvMultipleCities);
+        new RequestHandlerTask(getActivity(), lv, view).execute(query);
+        return view;
+
+    }
+}
